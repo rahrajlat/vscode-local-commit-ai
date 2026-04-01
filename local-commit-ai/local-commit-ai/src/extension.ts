@@ -3,12 +3,6 @@ import axios from 'axios';
 
 type CommitType = 'feat' | 'fix' | 'refactor' | 'chore';
 
-interface CommitResult {
-    type: CommitType;
-    summary: string;
-    details: string[];
-}
-
 export function activate(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
         'localCommitAI.generateCommit',
@@ -26,16 +20,12 @@ export function activate(context: vscode.ExtensionContext) {
                     async () => {
                         const message = await generateCommitMessage(diff);
 
-                        const choice = await vscode.window.showInformationMessage(
-                            message,
-                            { modal: true },
-                            'Accept',
-                            'Cancel'
-                        );
+                        // ✅ NO PROMPT → direct insert
+                        await insertIntoSourceControl(message);
 
-                        if (choice === 'Accept') {
-                            await insertIntoSourceControl(message);
-                        }
+                        vscode.window.showInformationMessage(
+                            'Commit message generated'
+                        );
                     }
                 );
             } catch (err: any) {
@@ -125,7 +115,7 @@ Rules:
 - Comments/docs → chore
 - No hallucination
 - Imperative tone
-- Focus on intent, not line counts
+- Focus on intent, not line count
 
 Diff:
 ${safeDiff}
@@ -149,11 +139,11 @@ ${safeDiff}
 
         const parsed = JSON.parse(jsonMatch[0]);
 
-        return formatCommit(
-            normalizeType(parsed.type, parsed.summary),
-            cleanText(parsed.summary),
-            (parsed.details || []).map((d: string) => cleanText(d))
-        );
+        const type = normalizeType(parsed.type, parsed.summary);
+        const summary = cleanText(parsed.summary);
+        const details = (parsed.details || []).map((d: string) => cleanText(d));
+
+        return formatCommit(type, summary, details);
 
     } catch (err: any) {
         console.error(err);
@@ -188,7 +178,7 @@ function normalizeType(type: string, summary: string): CommitType {
     if (text.includes('refactor')) return 'refactor';
     if (text.includes('add') || text.includes('create')) return 'feat';
 
-   return (type as CommitType) || 'chore';
+    return (type as CommitType) || 'chore';
 }
 
 function formatCommit(type: string, summary: string, details: string[]) {
