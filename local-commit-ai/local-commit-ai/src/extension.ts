@@ -9,6 +9,8 @@ interface CommitResult {
     details: string[];
 }
 
+'TODO: Add config option for model name and Ollama URL'
+
 export function activate(context: vscode.ExtensionContext) {
     const disposable = vscode.commands.registerCommand(
         'localCommitAI.generateCommit',
