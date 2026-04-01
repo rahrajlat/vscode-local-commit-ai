@@ -14,13 +14,24 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
+  "commands": [
+    {
+      "command": "localCommitAI.generateCommit",
+      "title": "Generate Commit Message"
+    }
+  ],
+  "menus": {
+    "scm/title": [
       {
         "command": "localCommitAI.generateCommit",
-        "title": "Generate Commit Message (Local AI)"
+        "when": "scmProvider == git",
+        "group": "navigation"
       }
     ]
-  },
+  }
+}
+  
+  ,
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
