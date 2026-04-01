@@ -1,10 +1,11 @@
 {
   "name": "local-commit-ai",
-  "displayName": "local-commit-ai",
-  "description": "",
+  "displayName": "Local Commit AI",
+  "description": "Generate git commit messages using local LLMs (Ollama)",
   "version": "0.0.1",
+  "publisher": "your-name",
   "engines": {
-    "vscode": "^1.110.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Other"
@@ -14,43 +15,60 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-  "commands": [
-    {
-      "command": "localCommitAI.generateCommit",
-      "title": "Generate Commit Message"
-    }
-  ],
-  "menus": {
-    "scm/title": [
+    "commands": [
       {
         "command": "localCommitAI.generateCommit",
-        "when": "scmProvider == git",
-        "group": "navigation"
+        "title": "⚡ Generate Commit Message"
       }
-    ]
-  }
-}
-  
-  ,
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "localCommitAI.generateCommit",
+          "when": "scmProvider == git",
+          "group": "navigation"
+        }
+      ],
+      "scm/inputBox": [
+        {
+          "command": "localCommitAI.generateCommit",
+          "when": "scmProvider == git",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Local Commit AI",
+      "properties": {
+        "localCommitAI.ollamaHost": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama API host URL"
+        },
+        "localCommitAI.model": {
+          "type": "string",
+          "default": "llama3.1",
+          "description": "Ollama model to use"
+        },
+        "localCommitAI.promptTemplate": {
+          "type": "string",
+          "default": "",
+          "description": "Custom prompt template (use {{diff}} placeholder)"
+        }
+      }
+    }
+  },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "package": "vsce package"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.10",
-    "@types/node": "22.x",
-    "@types/vscode": "^1.110.0",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2",
-    "eslint": "^9.39.3",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1"
+    "@types/node": "^25.5.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.0.0"
   },
   "dependencies": {
-    "axios": "^1.14.0"
+    "axios": "^1.6.0"
   }
 }
