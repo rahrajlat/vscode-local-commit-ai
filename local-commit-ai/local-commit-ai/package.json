@@ -2,7 +2,7 @@
   "name": "local-commit-ai",
   "displayName": "Local Commit AI",
   "description": "Generate git commit messages using local LLMs (Ollama)",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "rahul-devlocal-commit-ai",
   "engines": {
     "vscode": "^1.85.0"
