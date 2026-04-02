@@ -1,4 +1,5 @@
 <h1 align="center">Local Commit AI</h1>
+<h1 align="center">Local Commit AI</h1>
 
 <p align="center">
   AI-powered git commit messages — fully local, fast, and private.<br/>

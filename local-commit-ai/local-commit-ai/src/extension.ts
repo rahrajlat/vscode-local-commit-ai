@@ -191,18 +191,17 @@ async function runPRDescriptionFlow() {
         const description = (mdStart > 0 ? raw.slice(mdStart) : raw).trim();
         if (!description) throw new Error('Empty response from model');
 
+        const doc = await vscode.workspace.openTextDocument({ content: description, language: 'markdown' });
+        await vscode.window.showTextDocument(doc);
+
         const action = await vscode.window.showInformationMessage(
-            'PR description ready',
-            'Copy to clipboard',
-            'Open in editor'
+            'PR description opened in editor',
+            'Copy to clipboard'
         );
 
         if (action === 'Copy to clipboard') {
             await vscode.env.clipboard.writeText(description);
             vscode.window.showInformationMessage('PR description copied to clipboard');
-        } else if (action === 'Open in editor') {
-            const doc = await vscode.workspace.openTextDocument({ content: description, language: 'markdown' });
-            await vscode.window.showTextDocument(doc);
         }
 
     } catch (err: any) {
