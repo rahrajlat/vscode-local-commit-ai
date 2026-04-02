@@ -101,21 +101,39 @@ async function generateCommitMessage(diff: string): Promise<string> {
     const { host, model, promptTemplate } = getConfig();
 
     const defaultPrompt = `
-You are a senior software engineer.
+You are a senior software engineer reviewing a git diff.
 
-Analyze the git diff and return ONLY JSON:
+Your task is to classify and summarize the change.
+
+Return ONLY valid JSON in the following format:
 
 {
   "type": "feat | fix | refactor | chore",
-  "summary": "short summary",
-  "details": ["bullet 1", "bullet 2"]
+  "summary": "concise, one-line summary in imperative tense",
+  "details": ["key change 1", "key change 2"]
 }
 
 Rules:
-- Comments/docs → chore
-- No hallucination
-- Imperative tone
-- Focus on intent, not line count
+- "feat": introduces new functionality
+- "fix": resolves a bug or incorrect behavior
+- "refactor": improves structure without changing behavior
+- "chore": non-functional changes (comments, docs, formatting, renaming, config)
+
+Strict guidelines:
+- Do NOT include any text outside the JSON
+- Do NOT hallucinate missing context
+- Base your answer ONLY on the provided diff
+- Prefer correctness over guessing
+- Keep the summary under 12 words
+- Use imperative tone (e.g., "Add validation", not "Added validation")
+- Focus on intent and impact, not implementation details
+- Ignore trivial changes unless they affect behavior
+- If multiple types apply, choose the dominant intent
+
+Edge cases:
+- Only comments/docs → "chore"
+- Pure renaming/formatting → "chore"
+- Mixed changes → pick the primary purpose
 
 Diff:
 ${safeDiff}
