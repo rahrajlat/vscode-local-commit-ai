@@ -42,6 +42,7 @@
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
 - [Commands](#commands)
+- [PR Description Generation](#pr-description-generation)
 - [Commit Format](#commit-format)
 - [Troubleshooting](#troubleshooting)
 - [About the Author](#about-the-author)
@@ -60,6 +61,7 @@
 - **Any Ollama model** — works with `llama3.1`, `mistral`, `codellama`, and more
 - **File-count guard** — blocks generation if too many files are staged, preventing noisy commits
 - **Status bar indicator** — shows active model, clickable to open settings
+- **PR description generation** — generates a full GitHub-ready pull request description from your branch commits and diff, with one-click copy or open in editor
 
 ---
 
@@ -216,12 +218,25 @@ curl http://localhost:11434   # should return "Ollama is running"
 
 ## Screenshots
 
+### Commit Message Generation
+
 | | |
 |---|---|
 | ![Source Control panel](screenshots/menu1.png) | ![Toolbar button](screenshots/menu2.png) |
 | _Staged changes ready_ | _Generate button_ |
 | ![Generated message](screenshots/menu3.png) | |
 | _Message inserted_ | |
+
+### PR Description Generation
+
+| | |
+|---|---|
+| ![Command palette showing Generate PR Description](screenshots/pr2.png) | ![Generating PR description loading state](screenshots/pr1.png) |
+| _Command palette with "Generate PR Description"_ | _Generating in progress_ |
+| ![PR description ready notification](screenshots/pr3.png) | ![Generated PR description in editor](screenshots/pr4.png) |
+| _Ready — copy to clipboard or open in editor_ | _Full description in editor_ |
+| ![PR description pasted into GitHub](screenshots/pr5.png) | |
+| _Result pasted directly into a GitHub PR_ | |
 
 ---
 
@@ -254,6 +269,7 @@ All settings live under the `localCommitAI` namespace in VS Code settings (`Cmd+
 |---|---|---|
 | Generate Commit Message | `localCommitAI.generateCommit` | Generates a message from the current diff; prompts for confirmation if a message already exists |
 | Regenerate Commit Message | `localCommitAI.regenerateCommit` | Always regenerates, overwriting any existing message without prompting |
+| Generate PR Description | `localCommitAI.generatePRDescription` | Generates a GitHub-ready PR description from commits and diff since the main branch |
 
 Access via the **Source Control toolbar** or **Command Palette** (`Cmd+Shift+P` / `Ctrl+Shift+P`).
 
@@ -268,6 +284,21 @@ After a message is generated, a **Tweak it** button appears. Clicking it opens a
 
 The message is regenerated based on your feedback, and you can keep tweaking until you're satisfied.
 
+---
+
+## PR Description Generation
+
+The **Generate PR Description** command builds a full pull request description by analyzing all commits and the diff between your current branch and `main`. It constructs a structured markdown description covering what changed, why, and how to test — ready to paste directly into GitHub.
+
+**How to use:**
+
+1. Open the **Command Palette** (`Cmd+Shift+P` / `Ctrl+Shift+P`) and run **Generate PR Description**.
+2. Wait for the "generating PR description..." indicator to complete.
+3. When the "PR description ready" notification appears, choose:
+   - **Copy to clipboard** — paste it straight into GitHub's PR body field
+   - **Open in editor** — review and edit before copying
+
+The generated description follows a structured format with sections for what changed, a list of specific changes, and testing notes.
 
 ---
 
