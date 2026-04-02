@@ -219,5 +219,3 @@ MIT
 
 Rahul Rajasekharan  
 Senior Data Engineer
-
-- Portfolio: [rahulrajasekharan.dev](https://www.rahulrajasekharan.dev/)
