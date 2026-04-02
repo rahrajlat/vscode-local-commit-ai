@@ -186,7 +186,9 @@ async function runPRDescriptionFlow() {
 
         updateStatusBar();
 
-        const description: string = response.data?.message?.content?.trim() ?? '';
+        const raw: string = response.data?.message?.content ?? '';
+        const mdStart = raw.indexOf('## ');
+        const description = (mdStart > 0 ? raw.slice(mdStart) : raw).trim();
         if (!description) throw new Error('Empty response from model');
 
         const action = await vscode.window.showInformationMessage(
@@ -212,27 +214,26 @@ async function runPRDescriptionFlow() {
 
 function buildPRPrompt(commitLog: string, diff: string): string {
     return `
-You are a senior software engineer writing a pull request description.
+You are a senior software engineer. Generate a pull request description based on the commits and diff below.
 
-Here are the commits included in this PR:
-${commitLog}
+STRICT RULES:
+- Start your response with "## What changed" — nothing before it
+- Do not add any intro, preamble, title, or closing remarks
+- Do not explain what you are doing
+- Output raw markdown only
 
-Here is the full diff:
-${diff}
-
-Output ONLY the following markdown, with no text before or after it:
+Use exactly these four sections:
 
 ## What changed
-One or two sentences summarizing the change.
-
 ## Why
-The motivation or context behind this change.
-
 ## Changes
-A bullet list of the commits or key changes.
-
 ## Testing
-A markdown checklist of things to verify.
+
+Commits:
+${commitLog}
+
+Diff:
+${diff}
 `;
 }
 
