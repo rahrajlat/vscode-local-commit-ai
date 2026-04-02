@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/demo/logo.png" alt="Local Commit AI" width="600" />
+  <img src="https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/demo/logo.png" alt="Local Commit AI" width="600" />
 </p>
 
 ---
@@ -21,7 +21,7 @@
 
 Local Commit AI generates meaningful, [Conventional Commits](https://www.conventionalcommits.org/)-formatted git commit messages using a **local LLM via [Ollama](https://ollama.com)**. Everything runs on your machine — no network requests, no API keys, no telemetry.
 
-![Demo](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/demo/demo.gif)
+![Demo](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/demo/demo.gif)
 
 ---
 
@@ -40,9 +40,9 @@ Local Commit AI generates meaningful, [Conventional Commits](https://www.convent
 
 | | |
 |---|---|
-| ![Source Control panel](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/screenshots/menu1.png) | ![Toolbar button](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/screenshots/menu2.png) |
+| ![Source Control panel](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu1.png) | ![Toolbar button](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu2.png) |
 | _Staged changes ready_ | _Generate button_ |
-| ![Generated message](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/screenshots/menu3.png) | |
+| ![Generated message](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu3.png) | |
 | _Message inserted_ | |
 
 ---
