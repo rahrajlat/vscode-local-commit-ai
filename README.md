@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="demo/logo.png" alt="Local Commit AI Banner" width="600" />
-</p>
-
 <h1 align="center">🚀 Local Commit AI</h1>
 
 <p align="center">
@@ -15,6 +11,12 @@
   <img src="https://img.shields.io/badge/Ollama-Local%20LLM-black?style=flat" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
+
+
+<p align="center">
+  <img src="demo/logo.png" alt="Local Commit AI Banner" width="600" />
+</p>
+
 
 ---
 
