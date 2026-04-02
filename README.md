@@ -1,12 +1,22 @@
 <h1 align="center">Local Commit AI</h1>
-<p align="center"><b>AI-powered commit messages. Fully local. ⚡</b></p>
 
 <p align="center">
-  <img src="demo/logo.png" alt="Local Commit AI" width="100%" />
+  AI-powered commit messages. Fully local. ⚡  
+  <br/>
+  No API keys • Works offline • Fast
+</p>
+
+Generate meaningful, conventional git commit messages using a **local LLM via [Ollama](https://ollama.com)** — no cloud, no API keys, no data leaving your machine.
+
+<p align="center">
+  <img src="demo/logo.png" alt="Local Commit AI Banner" width="600" />
 </p>
 
 
-Generate meaningful, conventional git commit messages using a **local LLM via [Ollama](https://ollama.com)** — no cloud, no API keys, no data leaving your machine.
+
+
+
+
 
 ## Features
 
