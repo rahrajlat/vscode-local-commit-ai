@@ -4,6 +4,10 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 
 ---
 
+![Demo](demo/demo.gif)
+
+---
+
 ## Features
 
 - Analyzes your staged (or unstaged) git diff and generates a structured commit message
