@@ -15,6 +15,9 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 
 ---
 
+![Demo](demo/demo.gif)
+
+
 ## Requirements
 
 - [Ollama](https://ollama.com) installed and running locally

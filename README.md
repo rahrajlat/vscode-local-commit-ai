@@ -4,12 +4,6 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 
 ---
 
-## Adding Details
-
-![Demo](demo/demo.gif)
-
----
-
 ## Features
 
 - Analyzes your staged (or unstaged) git diff and generates a structured commit message
@@ -20,6 +14,9 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 - Works with any model available in Ollama (default: `llama3.1`)
 
 ---
+
+![Demo](demo/demo.gif)
+
 
 ## Requirements
 
@@ -218,10 +215,3 @@ Press `F5` in VS Code to launch an Extension Development Host for testing.
 ## License
 
 MIT
-
----
-
-## Author
-
-Rahul Rajasekharan  
-Senior Data Engineer
