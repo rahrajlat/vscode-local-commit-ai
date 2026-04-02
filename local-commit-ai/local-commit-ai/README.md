@@ -15,7 +15,7 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 
 ---
 
-![Demo](demo/demo.gif)
+![Demo](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/demo/demo.gif)
 
 
 ## Requirements
