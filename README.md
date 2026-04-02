@@ -110,16 +110,6 @@ Access via Source Control toolbar or Command Palette.
 
 All processing is local. Code and diffs stay on your machine.
 
-## Development
-
-```bash
-git clone <repo-url> && cd local-commit-ai
-npm install
-npm run compile      # TypeScript
-npm run watch        # Watch mode
-npm run package      # Build .vsix
-```
-
 Press `F5` to test in VS Code.
 
 ## License
