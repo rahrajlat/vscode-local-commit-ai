@@ -11,6 +11,8 @@ let statusBar: vscode.StatusBarItem;
 // LIFECYCLE
 // ─────────────────────────────────────────────
 
+// On extension activation, set up commands and the status bar button
+
 export function activate(context: vscode.ExtensionContext) {
     // Create a right-aligned status bar button that opens extension settings on click
     statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
