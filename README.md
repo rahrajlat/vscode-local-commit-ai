@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/demo/logo.png" alt="Local Commit AI" width="600" />
+  <img src="https://raw.githubusercontent.com/RahulRajasekharan/vscode-local-commit-ai/main/demo/logo.png" alt="Local Commit AI" width="600" />
 </p>
 
 ---
