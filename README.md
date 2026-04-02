@@ -47,6 +47,10 @@ Local Commit AI generates meaningful, [Conventional Commits](https://www.convent
 
 ---
 
+## Download
+
+https://marketplace.visualstudio.com/items?itemName=rahul-devlocal-commit-ai.local-commit-ai
+
 ## Requirements
 
 - [Ollama](https://ollama.com) installed and running locally
