@@ -36,6 +36,7 @@ Local Commit AI generates meaningful, [Conventional Commits](https://www.convent
 - Follows the [Conventional Commits](https://www.conventionalcommits.org/) specification
 - One-click insertion into VS Code's Source Control input
 - **Tweak it** — refine the generated message with quick options or a custom instruction
+- **Generate PR Description** — creates a structured pull request description from your branch's commits and diff against `main`
 - Runs entirely locally via Ollama — works offline
 - Customizable prompt templates
 - Compatible with any Ollama model (default: `llama3.1`)
@@ -44,12 +45,25 @@ Local Commit AI generates meaningful, [Conventional Commits](https://www.convent
 
 ## Screenshots
 
+### Commit Message Generation
+
 | | |
 |---|---|
 | ![Source Control panel](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu1.png) | ![Toolbar button](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu2.png) |
 | _Staged changes ready_ | _Generate button_ |
 | ![Generated message](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu3.png) | |
 | _Message inserted_ | |
+
+### PR Description Generation
+
+| | |
+|---|---|
+| ![PR command](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr1.png) | ![Generating PR description](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr2.png) |
+| _Run "Generate PR Description" from the Command Palette_ | _Ollama processes commits and diff locally_ |
+| ![PR description ready](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr3.png) | ![Copy or open in editor](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr4.png) |
+| _Description generated — choose to copy or open_ | _Open as a Markdown document in the editor_ |
+| ![PR description in editor](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr5.png) | |
+| _Structured PR description ready to paste_ | |
 
 ---
 
@@ -109,8 +123,20 @@ Download the latest release from [Releases](https://github.com/RahulRajasekharan
 |---|---|
 | **Generate Commit Message** | Generates a message from the current diff; prompts for confirmation if a message already exists |
 | **Regenerate Commit Message** | Always regenerates, overwriting any existing message without prompting |
+| **Generate PR Description** | Generates a structured PR description from all commits and the diff between your branch and `main` |
 
 Commands are accessible from the Source Control toolbar or the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`).
+
+### Generate PR Description
+
+Run **Generate PR Description** from the Command Palette to automatically create a pull request description based on your branch's commit history and full diff against `main`. The generated description follows this structure:
+
+- **What changed** — a concise summary of what was modified
+- **Why** — the motivation or context behind the change
+- **Changes** — a bullet list of specific changes made
+- **Testing** — how the changes were tested
+
+Once generated, you can **Copy to clipboard** to paste directly into GitHub/GitLab, or **Open in editor** to view and edit the Markdown before using it.
 
 ### Tweaking a message
 
