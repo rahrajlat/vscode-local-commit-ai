@@ -1,21 +1,28 @@
-<h1 align="center">Local Commit AI</h1>
-
-<p align="center">
-  AI-powered commit messages. Fully local. ⚡  
-  <br/>
-  No API keys • Works offline • Fast
-</p>
-
-Generate meaningful, conventional git commit messages using a **local LLM via [Ollama](https://ollama.com)** — no cloud, no API keys, no data leaving your machine.
-
 <p align="center">
   <img src="demo/logo.png" alt="Local Commit AI Banner" width="600" />
 </p>
 
+<h1 align="center">🚀 Local Commit AI</h1>
 
+<p align="center">
+  AI-powered git commit messages — fully local, fast, and private ⚡  
+  <br/>
+  No API keys • No cloud • No data leaving your machine
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/VS%20Code-Extension-blue?style=flat&logo=visualstudiocode" />
+  <img src="https://img.shields.io/badge/Ollama-Local%20LLM-black?style=flat" />
+  <img src="https://img.shields.io/badge/License-MIT-green" />
+</p>
 
+---
 
+## ✨ Overview
+
+Generate meaningful, conventional git commit messages using a **local LLM via [Ollama](https://ollama.com)** — no cloud, no API keys, no data leaving your machine.
+
+---
 
 
 ## Features
