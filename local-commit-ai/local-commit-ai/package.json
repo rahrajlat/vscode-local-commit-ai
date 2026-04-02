@@ -10,15 +10,20 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:localCommitAI.generateCommit"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "localCommitAI.generateCommit",
-        "title": "Generate Commit Message"
+        "title": "Generate Commit Message",
+        "icon": "$(sparkle)",
+        "tooltip": "Generate commit message from staged diff"
+      },
+      {
+        "command": "localCommitAI.regenerateCommit",
+        "title": "Regenerate Commit Message",
+        "icon": "$(sync)",
+        "tooltip": "Regenerate commit message"
       }
     ],
     "menus": {
@@ -26,14 +31,12 @@
         {
           "command": "localCommitAI.generateCommit",
           "when": "scmProvider == git",
-          "group": "navigation"
-        }
-      ],
-      "scm/inputBox": [
+          "group": "navigation@1"
+        },
         {
-          "command": "localCommitAI.generateCommit",
+          "command": "localCommitAI.regenerateCommit",
           "when": "scmProvider == git",
-          "group": "navigation"
+          "group": "navigation@2"
         }
       ]
     },

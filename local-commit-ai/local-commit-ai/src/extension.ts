@@ -4,41 +4,60 @@ import axios from 'axios';
 type CommitType = 'feat' | 'fix' | 'refactor' | 'chore';
 
 export function activate(context: vscode.ExtensionContext) {
-    const disposable = vscode.commands.registerCommand(
+    const generate = vscode.commands.registerCommand(
         'localCommitAI.generateCommit',
-        async () => {
-            try {
-                const diff = await getGitDiff();
-                if (!diff) return;
-
-                await vscode.window.withProgress(
-                    {
-                        location: vscode.ProgressLocation.Notification,
-                        title: 'Generating commit message...',
-                        cancellable: false
-                    },
-                    async () => {
-                        const message = await generateCommitMessage(diff);
-
-                        // ✅ NO PROMPT → direct insert
-                        await insertIntoSourceControl(message);
-
-                        vscode.window.showInformationMessage(
-                            'Commit message generated'
-                        );
-                    }
-                );
-            } catch (err: any) {
-                console.error(err);
-                vscode.window.showErrorMessage(`Error: ${err.message}`);
-            }
-        }
+        () => runCommitFlow({ force: false })
     );
 
-    context.subscriptions.push(disposable);
+    const regenerate = vscode.commands.registerCommand(
+        'localCommitAI.regenerateCommit',
+        () => runCommitFlow({ force: true })
+    );
+
+    context.subscriptions.push(generate, regenerate);
 }
 
 export function deactivate() {}
+
+
+// -----------------------------
+// FLOW
+// -----------------------------
+async function runCommitFlow({ force }: { force: boolean }) {
+    try {
+        const gitApi = getGitApi();
+        if (!gitApi) return;
+
+        const repo = gitApi.repositories[0];
+
+        if (!force && repo?.inputBox.value) {
+            const choice = await vscode.window.showQuickPick(
+                ['Replace existing message', 'Cancel'],
+                { placeHolder: 'A commit message already exists. Replace it?' }
+            );
+            if (choice !== 'Replace existing message') return;
+        }
+
+        const diff = await getGitDiff(gitApi);
+        if (!diff) return;
+
+        await vscode.window.withProgress(
+            {
+                location: vscode.ProgressLocation.Notification,
+                title: force ? 'Regenerating commit message...' : 'Generating commit message...',
+                cancellable: false
+            },
+            async () => {
+                const message = await generateCommitMessage(diff);
+                repo.inputBox.value = message;
+                vscode.window.showInformationMessage('Commit message generated');
+            }
+        );
+    } catch (err: any) {
+        console.error(err);
+        vscode.window.showErrorMessage(`Error: ${err.message}`);
+    }
+}
 
 
 // -----------------------------
@@ -58,9 +77,12 @@ function getConfig() {
 // -----------------------------
 // GIT
 // -----------------------------
-async function getGitDiff(): Promise<string | null> {
+function getGitApi() {
     const gitExtension = vscode.extensions.getExtension('vscode.git')?.exports;
-    if (!gitExtension) return null;
+    if (!gitExtension) {
+        vscode.window.showErrorMessage('Git extension not found');
+        return null;
+    }
 
     const git = gitExtension.getAPI(1);
     if (git.repositories.length === 0) {
@@ -68,6 +90,10 @@ async function getGitDiff(): Promise<string | null> {
         return null;
     }
 
+    return git;
+}
+
+async function getGitDiff(git: any): Promise<string | null> {
     const repo = git.repositories[0];
 
     let useStaged = true;
@@ -206,16 +232,4 @@ function formatCommit(type: string, summary: string, details: string[]) {
 
     const body = details.map(d => `- ${d}`).join('\n');
     return `${header}\n\n${body}`;
-}
-
-
-// -----------------------------
-// INSERT
-// -----------------------------
-async function insertIntoSourceControl(message: string) {
-    const gitExtension = vscode.extensions.getExtension('vscode.git')?.exports;
-    const git = gitExtension.getAPI(1);
-    const repo = git.repositories[0];
-
-    repo.inputBox.value = message;
 }
