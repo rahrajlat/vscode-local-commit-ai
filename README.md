@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/demo/logo.png" alt="Local Commit AI" width="560" />
+  <img src="demo/logo.png" alt="Local Commit AI" width="560" />
 </p>
 
 ---
@@ -28,7 +28,7 @@
 
 **Local Commit AI** is a VS Code extension that generates [Conventional Commits](https://www.conventionalcommits.org/)-formatted git commit messages using a **local LLM via [Ollama](https://ollama.com)**. Every step — from diff analysis to message generation — runs entirely on your machine. No telemetry, no API keys, no network requests.
 
-![Demo](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/demo/demo.gif)
+![Demo](demo/demo.gif)
 
 ---
 
@@ -218,9 +218,9 @@ curl http://localhost:11434   # should return "Ollama is running"
 
 | | |
 |---|---|
-| ![Source Control panel](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu1.png) | ![Toolbar button](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu2.png) |
+| ![Source Control panel](screenshots/menu1.png) | ![Toolbar button](screenshots/menu2.png) |
 | _Staged changes ready_ | _Generate button_ |
-| ![Generated message](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/menu3.png) | |
+| ![Generated message](screenshots/menu3.png) | |
 | _Message inserted_ | |
 
 ---
