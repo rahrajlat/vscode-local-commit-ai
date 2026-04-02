@@ -108,6 +108,14 @@ async function getGitDiff(git: any): Promise<string | null> {
         useStaged = false;
     }
 
+    const changedFiles = useStaged
+        ? repo.state.indexChanges.length
+        : repo.state.workingTreeChanges.length;
+
+    if (changedFiles > 20) {
+        throw new Error(`Too many files changed (${changedFiles}). Stage a focused set of changes (max 20 files) before generating a commit message.`);
+    }
+
     const diff = await repo.diff(useStaged);
 
     if (!diff) {
