@@ -11,10 +11,7 @@ let statusBar: vscode.StatusBarItem;
 // LIFECYCLE
 // ─────────────────────────────────────────────
 
-// On extension activation, set up commands and the status bar button
-
 export function activate(context: vscode.ExtensionContext) {
-    // Create a right-aligned status bar button that opens extension settings on click
     statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
     statusBar.command = {
         command: 'workbench.action.openSettings',
@@ -24,19 +21,16 @@ export function activate(context: vscode.ExtensionContext) {
     updateStatusBar();
     statusBar.show();
 
-    // Generate: prompts before overwriting an existing message
     const generate = vscode.commands.registerCommand(
         'localCommitAI.generateCommit',
         () => runCommitFlow({ force: false })
     );
 
-    // Regenerate: silently overwrites any existing message
     const regenerate = vscode.commands.registerCommand(
         'localCommitAI.regenerateCommit',
         () => runCommitFlow({ force: true })
     );
 
-    // Keep the status bar model label in sync when settings change
     const onConfigChange = vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('localCommitAI.model')) {
             updateStatusBar();
@@ -48,7 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {}
 
-// Refresh the status bar label with the currently configured model name
 function updateStatusBar() {
     const { model } = getConfig();
     statusBar.text = `$(sparkle) ${model}`;
@@ -62,9 +55,8 @@ function updateStatusBar() {
 
 /**
  * Main entry point for both "generate" and "regenerate" commands.
- * - Reads the staged (or unstaged) diff
- * - Sends it to the local Ollama model
- * - Writes the result into the SCM input box
+ * Streams the Ollama response live into the status bar, then offers
+ * a "Tweak it" button for iterative refinement.
  */
 async function runCommitFlow({ force }: { force: boolean }) {
     try {
@@ -73,7 +65,6 @@ async function runCommitFlow({ force }: { force: boolean }) {
 
         const repo = gitApi.repositories[0];
 
-        // When not force-regenerating, warn the user if a message already exists
         if (!force && repo?.inputBox.value) {
             const choice = await vscode.window.showQuickPick(
                 ['Replace existing message', 'Cancel'],
@@ -85,21 +76,67 @@ async function runCommitFlow({ force }: { force: boolean }) {
         const diff = await getGitDiff(gitApi);
         if (!diff) return;
 
-        await vscode.window.withProgress(
-            {
-                location: vscode.ProgressLocation.Notification,
-                title: force ? 'Regenerating commit message...' : 'Generating commit message...',
-                cancellable: false
-            },
-            async () => {
-                const message = await generateCommitMessage(diff);
-                repo.inputBox.value = message;
-                vscode.window.showInformationMessage('Commit message generated');
-            }
+        const message = await generateCommitMessage(diff);
+        repo.inputBox.value = message;
+
+        const action = await vscode.window.showInformationMessage(
+            'Commit message generated',
+            'Tweak it'
         );
+
+        if (action === 'Tweak it') {
+            await tweakCommitMessage(diff, message, repo);
+        }
+
     } catch (err: any) {
+        updateStatusBar();
         console.error(err);
         vscode.window.showErrorMessage(`Error: ${err.message}`);
+    }
+}
+
+/**
+ * Ask the user how to change the message, re-generate with feedback,
+ * and offer another round of tweaking until they're satisfied.
+ */
+async function tweakCommitMessage(diff: string, currentMessage: string, repo: any) {
+    const QUICK_OPTIONS = [
+        'Make it shorter',
+        'Add more detail',
+        'Change type to feat',
+        'Change type to fix',
+        'Change type to refactor',
+        'Change type to chore',
+        'Custom...'
+    ];
+
+    const choice = await vscode.window.showQuickPick(QUICK_OPTIONS, {
+        placeHolder: 'How should I change the commit message?'
+    });
+    if (!choice) return;
+
+    let feedback: string;
+    if (choice === 'Custom...') {
+        const custom = await vscode.window.showInputBox({
+            prompt: 'Describe how to change the commit message',
+            placeHolder: 'e.g. "mention the file that was changed"'
+        });
+        if (!custom) return;
+        feedback = custom;
+    } else {
+        feedback = choice;
+    }
+
+    const newMessage = await generateCommitMessage(diff, feedback, currentMessage);
+    repo.inputBox.value = newMessage;
+
+    const action = await vscode.window.showInformationMessage(
+        'Commit message updated',
+        'Tweak it again'
+    );
+
+    if (action === 'Tweak it again') {
+        await tweakCommitMessage(diff, newMessage, repo);
     }
 }
 
@@ -108,10 +145,8 @@ async function runCommitFlow({ force }: { force: boolean }) {
 // CONFIG
 // ─────────────────────────────────────────────
 
-/** Read all extension settings with safe defaults. */
 function getConfig() {
     const config = vscode.workspace.getConfiguration('localCommitAI');
-
     return {
         host: config.get<string>('ollamaHost') || 'http://localhost:11434',
         model: config.get<string>('model') || 'llama3',
@@ -125,10 +160,6 @@ function getConfig() {
 // GIT
 // ─────────────────────────────────────────────
 
-/**
- * Retrieve the built-in VS Code Git extension API (v1).
- * Returns null and shows an error if Git is unavailable or no repo is open.
- */
 function getGitApi() {
     const gitExtension = vscode.extensions.getExtension('vscode.git')?.exports;
     if (!gitExtension) {
@@ -145,16 +176,10 @@ function getGitApi() {
     return git;
 }
 
-/**
- * Retrieve the diff for the first repository.
- * Prefers staged changes; falls back to working-tree changes with user confirmation.
- * Throws if the number of changed files exceeds the configured limit.
- */
 async function getGitDiff(git: any): Promise<string | null> {
     const repo = git.repositories[0];
     let useStaged = true;
 
-    // If nothing is staged, offer to use unstaged changes instead
     if (repo.state.indexChanges.length === 0) {
         const choice = await vscode.window.showQuickPick(
             ['Use unstaged changes', 'Cancel'],
@@ -164,7 +189,6 @@ async function getGitDiff(git: any): Promise<string | null> {
         useStaged = false;
     }
 
-    // Guard against accidentally committing massive changesets
     const changedFiles = useStaged
         ? repo.state.indexChanges.length
         : repo.state.workingTreeChanges.length;
@@ -192,17 +216,59 @@ async function getGitDiff(git: any): Promise<string | null> {
 // ─────────────────────────────────────────────
 
 /**
- * Send the diff to Ollama and parse the structured JSON response into a
- * conventional commit message string.
- *
- * Falls back to "chore: update code" if the model returns unparseable output.
+ * Generate a commit message from Ollama.
+ * Accepts optional feedback + currentMessage for the "Tweak it" flow.
  */
-async function generateCommitMessage(diff: string): Promise<string> {
+async function generateCommitMessage(
+    diff: string,
+    feedback?: string,
+    currentMessage?: string
+): Promise<string> {
     const safeDiff = truncateDiff(diff);
     const { host, model, promptTemplate } = getConfig();
 
-    // Default prompt — instructs the model to return strict JSON only
-    const defaultPrompt = `
+    let prompt: string;
+    if (feedback && currentMessage) {
+        prompt = buildTweakPrompt(safeDiff, currentMessage, feedback);
+    } else if (promptTemplate) {
+        prompt = promptTemplate.replace('{{diff}}', safeDiff);
+    } else {
+        prompt = buildDefaultPrompt(safeDiff);
+    }
+
+    statusBar.text = `$(loading~spin) generating...`;
+
+    try {
+        const response = await axios.post(
+            `${host}/api/chat`,
+            { model, messages: [{ role: 'user', content: prompt }], stream: false }
+        );
+
+        updateStatusBar();
+
+        const fullText: string = response.data?.message?.content ?? '';
+
+        const jsonMatch = fullText.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error('No JSON found in model response');
+
+        const parsed = JSON.parse(jsonMatch[0]);
+        const type    = normalizeType(parsed.type, parsed.summary);
+        const summary = cleanText(parsed.summary);
+        const details = (parsed.details || []).map((d: string) => cleanText(d));
+
+        return formatCommit(type, summary, details);
+
+    } catch (err: any) {
+        updateStatusBar();
+        console.error(err);
+        vscode.window.showErrorMessage('Ollama request failed');
+        return 'chore: update code';
+    }
+}
+
+/** Prompt for the initial generation from a raw diff. */
+function buildDefaultPrompt(diff: string): string {
+    return `
 You are a senior software engineer reviewing a git diff.
 
 Your task is to classify and summarize the change.
@@ -238,40 +304,37 @@ Edge cases:
 - Mixed changes → pick the primary purpose
 
 Diff:
-${safeDiff}
+${diff}
 `;
+}
 
-    // Allow users to override the prompt via settings; {{diff}} is the placeholder
-    const prompt = promptTemplate
-        ? promptTemplate.replace('{{diff}}', safeDiff)
-        : defaultPrompt;
+/** Prompt used when the user asks to refine an existing message with feedback. */
+function buildTweakPrompt(diff: string, currentMessage: string, feedback: string): string {
+    return `
+You are a senior software engineer. You previously generated this git commit message:
 
-    try {
-        const response = await axios.post(`${host}/api/chat`, {
-            model,
-            messages: [{ role: 'user', content: prompt }],
-            stream: false
-        });
+"${currentMessage}"
 
-        const raw = response.data.message.content;
+The user wants you to: ${feedback}
 
-        // Extract the JSON block even if the model wraps it in extra prose
-        const jsonMatch = raw.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) throw new Error('Invalid JSON');
+Using the same diff below, generate a revised commit message that addresses the feedback.
+Return ONLY valid JSON in the following format:
 
-        const parsed = JSON.parse(jsonMatch[0]);
+{
+  "type": "feat | fix | refactor | chore",
+  "summary": "concise, one-line summary in imperative tense",
+  "details": ["key change 1", "key change 2"]
+}
 
-        const type    = normalizeType(parsed.type, parsed.summary);
-        const summary = cleanText(parsed.summary);
-        const details = (parsed.details || []).map((d: string) => cleanText(d));
+Guidelines:
+- If the feedback asks for a shorter message, use an empty "details" array
+- Use imperative tone (e.g., "Add validation", not "Added validation")
+- Keep the summary under 12 words
+- Do NOT include any text outside the JSON
 
-        return formatCommit(type, summary, details);
-
-    } catch (err: any) {
-        console.error(err);
-        vscode.window.showErrorMessage('Ollama request failed');
-        return 'chore: update code';
-    }
+Diff:
+${diff}
+`;
 }
 
 
@@ -279,15 +342,10 @@ ${safeDiff}
 // HELPERS
 // ─────────────────────────────────────────────
 
-/** Cap the diff at `max` characters to stay within model context limits. */
 function truncateDiff(diff: string, max = 8000): string {
     return diff.length > max ? diff.slice(0, max) + '\n...(truncated)' : diff;
 }
 
-/**
- * Normalise commit summary text to imperative mood and strip trailing periods.
- * e.g. "Added validation." → "add validation"
- */
 function cleanText(text: string): string {
     return text
         .replace(/^Added\s+/i,   'add ')
@@ -298,10 +356,6 @@ function cleanText(text: string): string {
         .trim();
 }
 
-/**
- * Override the model-assigned type when the summary wording makes the intent
- * unambiguous (e.g. a summary mentioning "fix" should always map to "fix").
- */
 function normalizeType(type: string, summary: string): CommitType {
     const text = (summary || '').toLowerCase();
 
@@ -313,16 +367,6 @@ function normalizeType(type: string, summary: string): CommitType {
     return (type as CommitType) || 'chore';
 }
 
-/**
- * Assemble the final conventional commit string.
- * If details are present they are appended as a bullet-point body.
- *
- * Example output:
- *   feat: add user authentication
- *
- *   - add JWT token validation
- *   - expose /login endpoint
- */
 function formatCommit(type: string, summary: string, details: string[]): string {
     const header = `${type}: ${summary}`;
     if (!details.length) return header;
