@@ -14,7 +14,7 @@
 
 
 <p align="center">
-  <img src="demo/logo.png" alt="Local Commit AI Banner" width="600" />
+  <img src="https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/demo/logo.png" alt="Local Commit AI Banner" width="600" />
 </p>
 
 
@@ -36,15 +36,15 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 - Customizable prompt templates
 - Works with any Ollama model (default: `llama3.1`)
 
-![Demo](demo/demo.gif)
+![Demo](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/demo/demo.gif)
 
 ## Screenshots
 
 | | |
 |---|---|
-| ![Source Control panel](screenshots/menu1.png) | ![Toolbar button](screenshots/menu2.png) |
+| ![Source Control panel](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/screenshots/menu1.png) | ![Toolbar button](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/screenshots/menu2.png) |
 | _Staged changes ready_ | _Generate button_ |
-| ![Generated message](screenshots/menu3.png) | |
+| ![Generated message](https://raw.githubusercontent.com/RahulRajasekharan/local-commit-ai/main/local-commit-ai/screenshots/menu3.png) | |
 | _Message inserted_ | |
 
 ## Requirements
