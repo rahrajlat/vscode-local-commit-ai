@@ -1,9 +1,8 @@
-<h1 align="center">🚀 Local Commit AI</h1>
+<h1 align="center">Local Commit AI</h1>
 
 <p align="center">
-  AI-powered git commit messages — fully local, fast, and private ⚡  
-  <br/>
-  No API keys • No cloud • No data leaving your machine
+  AI-powered git commit messages — fully local, fast, and private.<br/>
+  No API keys &bull; No cloud &bull; No data leaving your machine
 </p>
 
 <p align="center">
@@ -12,31 +11,30 @@
   <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
-
 <p align="center">
-  <img src="demo/logo.png" alt="Local Commit AI Banner" width="600" />
+  <img src="demo/logo.png" alt="Local Commit AI" width="600" />
 </p>
 
-
 ---
 
-## ✨ Overview
+## Overview
 
-Generate meaningful, conventional git commit messages using a **local LLM via [Ollama](https://ollama.com)** — no cloud, no API keys, no data leaving your machine.
+Local Commit AI generates meaningful, [Conventional Commits](https://www.conventionalcommits.org/)-formatted git commit messages using a **local LLM via [Ollama](https://ollama.com)**. Everything runs on your machine — no network requests, no API keys, no telemetry.
+
+![Demo](demo/demo.gif)
 
 ---
-
 
 ## Features
 
-- Analyzes staged/unstaged git diffs and generates structured commit messages
-- Follows [Conventional Commits](https://www.conventionalcommits.org/) format
+- Analyzes staged and unstaged git diffs to generate structured commit messages
+- Follows the [Conventional Commits](https://www.conventionalcommits.org/) specification
 - One-click insertion into VS Code's Source Control input
-- Runs entirely locally with Ollama
+- Runs entirely locally via Ollama — works offline
 - Customizable prompt templates
-- Works with any Ollama model (default: `llama3.1`)
+- Compatible with any Ollama model (default: `llama3.1`)
 
-![Demo](demo/demo.gif)
+---
 
 ## Screenshots
 
@@ -47,45 +45,66 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 | ![Generated message](screenshots/menu3.png) | |
 | _Message inserted_ | |
 
+---
+
 ## Requirements
 
-- [Ollama](https://ollama.com) installed and running
-- At least one model pulled (e.g., `llama3.1`)
-- Git repository in VS Code
+- [Ollama](https://ollama.com) installed and running locally
+- At least one model pulled (e.g., `ollama pull llama3.1`)
+- A git repository open in VS Code
+
+---
 
 ## Installation
 
-**VS Code Marketplace:** [Install Local Commit AI](https://marketplace.visualstudio.com/items?itemName=rahul-devlocal-commit-ai.local-commit-ai&ssr=false#overview) or search for "Local Commit AI" in Extensions.
+**VS Code Marketplace**
 
-**From `.vsix`:** Download from [Releases](https://github.com/RahulRajasekharan/local-commit-ai/releases), then Extensions → `...` → Install from VSIX.
+Search for **Local Commit AI** in the Extensions panel, or install directly from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=rahul-devlocal-commit-ai.local-commit-ai&ssr=false#overview).
+
+**Manual install from `.vsix`**
+
+Download the latest release from [Releases](https://github.com/RahulRajasekharan/local-commit-ai/releases), then go to Extensions → `...` → **Install from VSIX**.
+
+---
 
 ## Quick Start
 
-1. Install [Ollama](https://ollama.com) and pull a model: `ollama pull llama3.1`
-2. Run `ollama serve` (typically runs automatically at `http://localhost:11434`)
-3. Stage changes in VS Code's Source Control panel
-4. Click **Generate Commit Message** button
-5. Review and commit
+1. Install [Ollama](https://ollama.com) and pull a model:
+   ```
+   ollama pull llama3.1
+   ```
+2. Ensure Ollama is running (typically starts automatically at `http://localhost:11434`).
+3. Open a git repository in VS Code and stage your changes.
+4. Click the **Generate Commit Message** button in the Source Control toolbar.
+5. Review the generated message and commit.
+
+---
 
 ## Configuration
 
 | Setting | Default | Description |
 |---|---|---|
-| `localCommitAI.ollamaHost` | `http://localhost:11434` | Ollama URL |
-| `localCommitAI.model` | `llama3.1` | Model to use |
-| `localCommitAI.maxFiles` | `20` | Max changed files before blocking |
-| `localCommitAI.promptTemplate` | `""` | Custom prompt (use `{{diff}}` placeholder) |
+| `localCommitAI.ollamaHost` | `http://localhost:11434` | Ollama server URL |
+| `localCommitAI.model` | `llama3.1` | Model to use for generation |
+| `localCommitAI.maxFiles` | `20` | Maximum number of changed files before generation is blocked |
+| `localCommitAI.promptTemplate` | `""` | Custom prompt template (use `{{diff}}` as the diff placeholder) |
+
+---
 
 ## Commands
 
 | Command | Description |
 |---|---|
-| **Generate Commit Message** | Generate from diff; prompts if message exists |
-| **Regenerate Commit Message** | Always regenerates without prompting |
+| **Generate Commit Message** | Generates a message from the current diff; prompts for confirmation if a message already exists |
+| **Regenerate Commit Message** | Always regenerates, overwriting any existing message without prompting |
 
-Access via Source Control toolbar or Command Palette.
+Commands are accessible from the Source Control toolbar or the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`).
+
+---
 
 ## Commit Format
+
+Generated messages follow this structure:
 
 ```
 <type>: <summary>
@@ -94,24 +113,28 @@ Access via Source Control toolbar or Command Palette.
 - detail 2
 ```
 
-**Types:** `feat`, `fix`, `refactor`, `chore`
+**Supported types:** `feat`, `fix`, `refactor`, `chore`
+
+---
 
 ## Troubleshooting
 
 | Issue | Solution |
 |---|---|
-| "Ollama request failed" | Run `ollama serve`; check settings URL and `ollama list` |
-| "No Git repo found" | Open a folder with `.git` directory |
-| "No changes found" | Stage files or use unstaged changes |
-| "Too many files changed" | Increase `localCommitAI.maxFiles` or stage fewer files |
-| Poor quality | Try a larger model or custom `promptTemplate` |
+| "Ollama request failed" | Ensure `ollama serve` is running; verify the host URL in settings and run `ollama list` |
+| "No Git repo found" | Open a folder that contains a `.git` directory |
+| "No changes found" | Stage files or ensure unstaged changes are present |
+| "Too many files changed" | Increase `localCommitAI.maxFiles` or reduce the number of staged files |
+| Poor commit quality | Try a larger model or provide a custom `promptTemplate` |
+
+---
 
 ## Privacy
 
-All processing is local. Code and diffs stay on your machine.
+All processing happens locally on your machine. Your code and diffs are never transmitted to any external service.
 
-Press `F5` to test in VS Code.
+---
 
 ## License
 
-MIT
+[MIT](LICENSE)
