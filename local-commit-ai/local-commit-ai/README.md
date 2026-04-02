@@ -58,7 +58,7 @@ Local Commit AI generates meaningful, [Conventional Commits](https://www.convent
 
 | | |
 |---|---|
-| ![PR command](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr1.png) | ![Generating PR description](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr2.png) |
+| ![Generating PR description](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr2.png) |
 | _Run "Generate PR Description" from the Command Palette_ | _Ollama processes commits and diff locally_ |
 | ![PR description ready](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr3.png) | ![Copy or open in editor](https://raw.githubusercontent.com/rahrajlat/vscode-local-commit-ai/main/local-commit-ai/local-commit-ai/screenshots/pr4.png) |
 | _Description generated — choose to copy or open_ | _Open as a Markdown document in the editor_ |
