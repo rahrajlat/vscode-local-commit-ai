@@ -220,7 +220,7 @@ ${commitLog}
 Here is the full diff:
 ${diff}
 
-Write a clear PR description in markdown using this structure:
+Output ONLY the following markdown, with no text before or after it:
 
 ## What changed
 One or two sentences summarizing the change.
@@ -233,11 +233,6 @@ A bullet list of the commits or key changes.
 
 ## Testing
 A markdown checklist of things to verify.
-
-Guidelines:
-- Be concise and factual
-- Base everything only on the commits and diff provided
-- Do NOT include any preamble or explanation outside the markdown
 `;
 }
 
