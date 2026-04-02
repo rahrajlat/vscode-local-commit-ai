@@ -55,7 +55,7 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 
 ## Installation
 
-**VS Code Marketplace:** Search for "Local Commit AI" in Extensions and install.
+**VS Code Marketplace:** [Install Local Commit AI](https://marketplace.visualstudio.com/items?itemName=rahul-devlocal-commit-ai.local-commit-ai&ssr=false#overview) or search for "Local Commit AI" in Extensions.
 
 **From `.vsix`:** Download from [Releases](https://github.com/RahulRajasekharan/local-commit-ai/releases), then Extensions → `...` → Install from VSIX.
 
