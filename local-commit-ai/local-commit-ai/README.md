@@ -84,6 +84,7 @@ Open VS Code Settings (`Ctrl+,`) and search for **Local Commit AI**, or edit you
 |---|---|---|
 | `localCommitAI.ollamaHost` | `http://localhost:11434` | URL where Ollama is running |
 | `localCommitAI.model` | `llama3.1` | Ollama model to use for generation |
+| `localCommitAI.maxFiles` | `20` | Maximum number of changed files allowed before generation is blocked |
 | `localCommitAI.promptTemplate` | `""` | Custom prompt template (use `{{diff}}` as placeholder for the git diff) |
 
 ### Example `settings.json`
@@ -92,6 +93,7 @@ Open VS Code Settings (`Ctrl+,`) and search for **Local Commit AI**, or edit you
 {
   "localCommitAI.ollamaHost": "http://localhost:11434",
   "localCommitAI.model": "mistral",
+  "localCommitAI.maxFiles": 10,
   "localCommitAI.promptTemplate": ""
 }
 ```
@@ -141,13 +143,16 @@ feat: add user authentication middleware
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `Generate Commit Message` | Analyze diff and insert commit message into Source Control input |
+| Command | Icon | Description |
+|---|---|---|
+| `Generate Commit Message` | ✨ | Generate a commit message from the diff; prompts before overwriting an existing message |
+| `Regenerate Commit Message` | 🔄 | Always regenerates without prompting, even if a message already exists |
+
+Both buttons appear as icons in the Source Control panel toolbar, directly above the commit message input box.
 
 Access via:
-- Source Control toolbar button
-- Command Palette (`Ctrl+Shift+P`) → `Generate Commit Message`
+- Source Control toolbar buttons
+- Command Palette (`Ctrl+Shift+P`) → `Generate Commit Message` or `Regenerate Commit Message`
 
 ---
 
@@ -163,6 +168,10 @@ Access via:
 
 **"No changes found"**
 - Stage at least one file, or choose to use unstaged changes when prompted
+
+**"Too many files changed"**
+- Generation is blocked when the number of changed files exceeds `localCommitAI.maxFiles` (default: 20)
+- Either stage a smaller, focused set of changes, or increase the limit in settings
 
 **Message quality is poor**
 - Try a larger or more capable model (e.g. `llama3.1`, `mixtral`, `qwen2.5-coder`)

@@ -69,7 +69,8 @@ function getConfig() {
     return {
         host: config.get<string>('ollamaHost') || 'http://localhost:11434',
         model: config.get<string>('model') || 'llama3',
-        promptTemplate: config.get<string>('promptTemplate') || ''
+        promptTemplate: config.get<string>('promptTemplate') || '',
+        maxFiles: config.get<number>('maxFiles') ?? 20
     };
 }
 
@@ -112,8 +113,9 @@ async function getGitDiff(git: any): Promise<string | null> {
         ? repo.state.indexChanges.length
         : repo.state.workingTreeChanges.length;
 
-    if (changedFiles > 20) {
-        throw new Error(`Too many files changed (${changedFiles}). Stage a focused set of changes (max 20 files) before generating a commit message.`);
+    const { maxFiles } = getConfig();
+    if (changedFiles > maxFiles) {
+        throw new Error(`Too many files changed (${changedFiles}). Stage a focused set of changes (max ${maxFiles} files) before generating a commit message.`);
     }
 
     const diff = await repo.diff(useStaged);
