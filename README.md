@@ -12,6 +12,7 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 - Runs entirely locally using Ollama — your code never leaves your machine
 - Supports custom prompt templates for full control over LLM behavior
 - Works with any model available in Ollama (default: `llama3.1`)
+- Customisable prompt templates
 
 ---
 
