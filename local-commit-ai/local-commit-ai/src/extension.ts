@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import axios from 'axios';
+import * as http from 'http';
+import * as https from 'https';
 import { execSync } from 'child_process';
 
 // Supported conventional commit types
@@ -179,14 +180,14 @@ async function runPRDescriptionFlow() {
         const safeDiff = truncateDiff(diff, 12000);
         const prompt = buildPRPrompt(commitLog, safeDiff);
 
-        const response = await axios.post(
+        const response = await postJson(
             `${host}/api/chat`,
             { model, messages: [{ role: 'user', content: prompt }], stream: false }
         );
 
         updateStatusBar();
 
-        const raw: string = response.data?.message?.content ?? '';
+        const raw: string = response?.message?.content ?? '';
         const mdStart = raw.indexOf('## ');
         const description = (mdStart > 0 ? raw.slice(mdStart) : raw).trim();
         if (!description) throw new Error('Empty response from model');
@@ -335,14 +336,14 @@ async function generateCommitMessage(
     statusBar.text = `$(loading~spin) generating...`;
 
     try {
-        const response = await axios.post(
+        const response = await postJson(
             `${host}/api/chat`,
             { model, messages: [{ role: 'user', content: prompt }], stream: false }
         );
 
         updateStatusBar();
 
-        const fullText: string = response.data?.message?.content ?? '';
+        const fullText: string = response?.message?.content ?? '';
 
         const jsonMatch = fullText.match(/\{[\s\S]*\}/);
         if (!jsonMatch) throw new Error('No JSON found in model response');
@@ -437,6 +438,29 @@ ${diff}
 // ─────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────
+
+function postJson(url: string, body: object): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const payload = JSON.stringify(body);
+        const parsed = new URL(url);
+        const lib = parsed.protocol === 'https:' ? https : http;
+        const req = lib.request(
+            { hostname: parsed.hostname, port: parsed.port, path: parsed.pathname + parsed.search,
+              method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } },
+            res => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                    try { resolve(JSON.parse(data)); }
+                    catch (e) { reject(new Error(`Failed to parse response: ${data}`)); }
+                });
+            }
+        );
+        req.on('error', reject);
+        req.write(payload);
+        req.end();
+    });
+}
 
 function truncateDiff(diff: string, max = 8000): string {
     return diff.length > max ? diff.slice(0, max) + '\n...(truncated)' : diff;
