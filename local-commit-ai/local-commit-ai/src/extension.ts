@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import axios from 'axios';
+import { execSync } from 'child_process';
 
 // Supported conventional commit types
 type CommitType = 'feat' | 'fix' | 'refactor' | 'chore';
@@ -37,7 +38,12 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(generate, regenerate, statusBar, onConfigChange);
+    const generatePR = vscode.commands.registerCommand(
+        'localCommitAI.generatePRDescription',
+        () => runPRDescriptionFlow()
+    );
+
+    context.subscriptions.push(generate, regenerate, generatePR, statusBar, onConfigChange);
 }
 
 export function deactivate() {}
@@ -138,6 +144,101 @@ async function tweakCommitMessage(diff: string, currentMessage: string, repo: an
     if (action === 'Tweak it again') {
         await tweakCommitMessage(diff, newMessage, repo);
     }
+}
+
+
+// ─────────────────────────────────────────────
+// PR DESCRIPTION FLOW
+// ─────────────────────────────────────────────
+
+async function runPRDescriptionFlow() {
+    try {
+        const gitApi = getGitApi();
+        if (!gitApi) return;
+
+        const workspacePath = gitApi.repositories[0].rootUri.fsPath;
+
+        let commitLog: string;
+        let diff: string;
+        try {
+            commitLog = execSync('git log main..HEAD --oneline', { cwd: workspacePath }).toString().trim();
+            diff = execSync('git diff main...HEAD', { cwd: workspacePath }).toString();
+        } catch {
+            commitLog = execSync('git log master..HEAD --oneline', { cwd: workspacePath }).toString().trim();
+            diff = execSync('git diff master...HEAD', { cwd: workspacePath }).toString();
+        }
+
+        if (!commitLog) {
+            vscode.window.showWarningMessage('No commits ahead of main found');
+            return;
+        }
+
+        statusBar.text = `$(loading~spin) generating PR description...`;
+
+        const { host, model } = getConfig();
+        const safeDiff = truncateDiff(diff, 12000);
+        const prompt = buildPRPrompt(commitLog, safeDiff);
+
+        const response = await axios.post(
+            `${host}/api/chat`,
+            { model, messages: [{ role: 'user', content: prompt }], stream: false }
+        );
+
+        updateStatusBar();
+
+        const description: string = response.data?.message?.content?.trim() ?? '';
+        if (!description) throw new Error('Empty response from model');
+
+        const action = await vscode.window.showInformationMessage(
+            'PR description ready',
+            'Copy to clipboard',
+            'Open in editor'
+        );
+
+        if (action === 'Copy to clipboard') {
+            await vscode.env.clipboard.writeText(description);
+            vscode.window.showInformationMessage('PR description copied to clipboard');
+        } else if (action === 'Open in editor') {
+            const doc = await vscode.workspace.openTextDocument({ content: description, language: 'markdown' });
+            await vscode.window.showTextDocument(doc);
+        }
+
+    } catch (err: any) {
+        updateStatusBar();
+        console.error(err);
+        vscode.window.showErrorMessage(`PR Description Error: ${err.message}`);
+    }
+}
+
+function buildPRPrompt(commitLog: string, diff: string): string {
+    return `
+You are a senior software engineer writing a pull request description.
+
+Here are the commits included in this PR:
+${commitLog}
+
+Here is the full diff:
+${diff}
+
+Write a clear PR description in markdown using this structure:
+
+## What changed
+One or two sentences summarizing the change.
+
+## Why
+The motivation or context behind this change.
+
+## Changes
+A bullet list of the commits or key changes.
+
+## Testing
+A markdown checklist of things to verify.
+
+Guidelines:
+- Be concise and factual
+- Base everything only on the commits and diff provided
+- Do NOT include any preamble or explanation outside the markdown
+`;
 }
 
 

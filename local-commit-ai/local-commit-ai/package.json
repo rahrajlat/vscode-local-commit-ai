@@ -29,6 +29,12 @@
         "title": "Regenerate Commit Message",
         "icon": "$(sync)",
         "tooltip": "Regenerate commit message"
+      },
+      {
+        "command": "localCommitAI.generatePRDescription",
+        "title": "Generate PR Description",
+        "icon": "$(git-pull-request)",
+        "tooltip": "Generate a PR description from commits ahead of main"
       }
     ],
     "menus": {
@@ -42,6 +48,11 @@
           "command": "localCommitAI.regenerateCommit",
           "when": "scmProvider == git",
           "group": "navigation@2"
+        },
+        {
+          "command": "localCommitAI.generatePRDescription",
+          "when": "scmProvider == git",
+          "group": "navigation@3"
         }
       ]
     },
