@@ -18,6 +18,23 @@ Generate meaningful, conventional git commit messages using a **local LLM via [O
 
 ![Demo](demo/demo.gif)
 
+---
+
+## Screenshots
+
+**Source Control panel with staged changes, ready to generate:**
+
+![Source Control panel](screenshots/menu1.png)
+
+**Generate Commit Message button in the toolbar:**
+
+![Toolbar button](screenshots/menu2.png)
+
+**Generated commit message inserted into the input box:**
+
+![Generated message](screenshots/menu3.png)
+
+---
 
 ## Requirements
 
