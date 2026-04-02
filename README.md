@@ -257,6 +257,18 @@ All settings live under the `localCommitAI` namespace in VS Code settings (`Cmd+
 
 Access via the **Source Control toolbar** or **Command Palette** (`Cmd+Shift+P` / `Ctrl+Shift+P`).
 
+### Tweaking a message
+
+After a message is generated, a **Tweak it** button appears. Clicking it opens a quick-pick menu with preset options:
+
+- Make it shorter
+- Add more detail
+- Change type to `feat`, `fix`, `refactor`, or `chore`
+- Custom — type your own instruction
+
+The message is regenerated based on your feedback, and you can keep tweaking until you're satisfied.
+
+
 ---
 
 ## Commit Format

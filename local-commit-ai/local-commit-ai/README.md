@@ -35,6 +35,7 @@ Local Commit AI generates meaningful, [Conventional Commits](https://www.convent
 - Analyzes staged and unstaged git diffs to generate structured commit messages
 - Follows the [Conventional Commits](https://www.conventionalcommits.org/) specification
 - One-click insertion into VS Code's Source Control input
+- **Tweak it** — refine the generated message with quick options or a custom instruction
 - Runs entirely locally via Ollama — works offline
 - Customizable prompt templates
 - Compatible with any Ollama model (default: `llama3.1`)
@@ -110,6 +111,17 @@ Download the latest release from [Releases](https://github.com/RahulRajasekharan
 | **Regenerate Commit Message** | Always regenerates, overwriting any existing message without prompting |
 
 Commands are accessible from the Source Control toolbar or the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`).
+
+### Tweaking a message
+
+After a message is generated, a **Tweak it** button appears. Clicking it opens a quick-pick menu with preset options:
+
+- Make it shorter
+- Add more detail
+- Change type to `feat`, `fix`, `refactor`, or `chore`
+- Custom — type your own instruction
+
+The message is regenerated based on your feedback, and you can keep tweaking until you're satisfied.
 
 ---
 
