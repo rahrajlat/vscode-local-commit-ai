@@ -3,7 +3,18 @@ import axios from 'axios';
 
 type CommitType = 'feat' | 'fix' | 'refactor' | 'chore';
 
+let statusBar: vscode.StatusBarItem;
+
 export function activate(context: vscode.ExtensionContext) {
+    statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    statusBar.command = {
+        command: 'workbench.action.openSettings',
+        title: 'Open Local Commit AI Settings',
+        arguments: ['localCommitAI']
+    };
+    updateStatusBar();
+    statusBar.show();
+
     const generate = vscode.commands.registerCommand(
         'localCommitAI.generateCommit',
         () => runCommitFlow({ force: false })
@@ -14,10 +25,22 @@ export function activate(context: vscode.ExtensionContext) {
         () => runCommitFlow({ force: true })
     );
 
-    context.subscriptions.push(generate, regenerate);
+    const onConfigChange = vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration('localCommitAI.model')) {
+            updateStatusBar();
+        }
+    });
+
+    context.subscriptions.push(generate, regenerate, statusBar, onConfigChange);
 }
 
 export function deactivate() {}
+
+function updateStatusBar() {
+    const { model } = getConfig();
+    statusBar.text = `$(sparkle) ${model}`;
+    statusBar.tooltip = `Local Commit AI — model: ${model}\nClick to open settings`;
+}
 
 
 // -----------------------------
