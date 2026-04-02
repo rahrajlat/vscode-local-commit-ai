@@ -3,13 +3,18 @@
   "displayName": "Local Commit AI",
   "description": "Generate git commit messages using local LLMs (Ollama)",
   "version": "0.0.1",
-  "publisher": "Rahul Rajasekharan",
+  "publisher": "RahulRajasekharan",
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": [
     "Other"
   ],
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RahulRajasekharan/local-commit-ai"
+  },
   "main": "./out/extension.js",
   "contributes": {
     "commands": [

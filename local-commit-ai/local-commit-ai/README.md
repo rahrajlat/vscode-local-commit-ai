@@ -31,7 +31,7 @@ Search for **Local Commit AI** in the Extensions panel (`Ctrl+Shift+X` / `Cmd+Sh
 
 ### From a `.vsix` file
 
-1. Download the `.vsix` file from the [Releases](../../releases) page
+1. Download the `.vsix` file from the [Releases](https://github.com/RahulRajasekharan/local-commit-ai/releases) page
 2. Open VS Code and go to Extensions (`Ctrl+Shift+X`)
 3. Click the `...` menu → **Install from VSIX...**
 4. Select the downloaded file
