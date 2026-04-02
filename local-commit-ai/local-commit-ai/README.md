@@ -6,7 +6,12 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/VS%20Code-Extension-blue?style=flat&logo=visualstudiocode" />
+  <a href="https://marketplace.visualstudio.com/items?itemName=rahul-devlocal-commit-ai.local-commit-ai">
+    <img src="https://img.shields.io/visual-studio-marketplace/v/rahul-devlocal-commit-ai.local-commit-ai?style=flat&label=VS%20Marketplace&logo=visualstudiocode&color=blue" />
+  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=rahul-devlocal-commit-ai.local-commit-ai">
+    <img src="https://img.shields.io/visual-studio-marketplace/d/rahul-devlocal-commit-ai.local-commit-ai?style=flat&label=Installs&color=brightgreen" />
+  </a>
   <img src="https://img.shields.io/badge/Ollama-Local%20LLM-black?style=flat" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
