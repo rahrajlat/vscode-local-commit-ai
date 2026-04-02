@@ -1,7 +1,10 @@
+<h1 align="center">Local Commit AI</h1>
+<p align="center"><b>AI-powered commit messages. Fully local. ⚡</b></p>
 
-# Local Commit AI
+<p align="center">
+  <img src="demo/logo.png" alt="Local Commit AI" width="100%" />
+</p>
 
-![Banner](demo/logo.png)
 
 Generate meaningful, conventional git commit messages using a **local LLM via [Ollama](https://ollama.com)** — no cloud, no API keys, no data leaving your machine.
 
